@@ -1,0 +1,14 @@
+# Docker 镜像构建基础镜像
+FROM openjdk:8-jdk-alpine
+
+# 指定工作目录
+WORKDIR /app
+
+# 将jar包添加到工作目录
+ADD oj-judge-service-0.0.1-SNAPSHOT.jar .
+
+# 暴露端口
+EXPOSE 8010
+
+# 启动命令
+CMD ["java","-jar","/app/oj-judge-service-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]

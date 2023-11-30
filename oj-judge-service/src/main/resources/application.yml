@@ -1,0 +1,48 @@
+server:
+  port: 8010
+  servlet:
+    context-path: /judge
+    session:
+      cookie:
+        path: /api
+spring:
+  application:
+    name: oj-judge-service
+  main:
+    allow-circular-references: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 844c4ae7-0b2a-4dcb-b82a-db91e3ce24af #nacos名称空间
+        password: 需要更换
+  rabbitmq:
+    addresses: 需要更换
+    port: 5672
+    virtual-host: /
+    publisher-confirm-type: correlated #打开生产者消息确认机制
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/oj
+    username: root
+    password: 需要更换
+  # Redis 配置
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    timeout: 5000
+    password: 需要更换
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
+      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
+      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+# 配置执行代码的方式
+codesandbox:
+  type: remote

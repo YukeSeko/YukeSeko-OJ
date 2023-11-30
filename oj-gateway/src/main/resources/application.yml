@@ -1,0 +1,43 @@
+server:
+  port: 88
+spring:
+  application:
+    name: oj-gateway
+  main:
+    allow-circular-references: true
+    web-application-type: reactive
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 844c4ae7-0b2a-4dcb-b82a-db91e3ce24af #nacos名称空间
+        password: 需要更换
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          lower-case-service-id: true
+      routes:
+        - id: userService
+          uri: lb://oj-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: questionService
+          uri: lb://oj-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: judgeService
+          uri: lb://oj-judge-service
+          predicates:
+            - Path=/api/judge/**
+knife4j:
+  gateway:
+    # ① 第一个配置，开启gateway聚合组件
+    enabled: true
+    # ② 第二行配置，设置聚合模式采用discover服务发现的模式
+    strategy: discover
+    discover:
+      # ③ 第三行配置，开启discover模式
+      enabled: true
+      # ④ 第四行配置，聚合子服务全部为Swagger2规范的文档
+      version: swagger2

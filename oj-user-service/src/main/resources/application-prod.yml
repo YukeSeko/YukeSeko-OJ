@@ -1,0 +1,49 @@
+server:
+  port: 8030
+  servlet:
+    context-path: /api/user
+    session:
+      cookie:
+        path: /api
+spring:
+  session:
+    store-type: redis
+  application:
+    name: oj-user-service
+  main:
+    allow-circular-references: true
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+        namespace: 844c4ae7-0b2a-4dcb-b82a-db91e3ce24af #nacos名称空间
+        password: 你的账号或密码
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://117.72.15.110:3306/oj
+    username: root
+    password: 你的账号或密码
+  # Redis 配置
+  redis:
+    database: 0
+    host: redis
+    port: 6379
+    timeout: 5000
+    password: 你的账号或密码
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
+      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
+      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+
+knife4j:
+  enable: true

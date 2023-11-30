@@ -1,0 +1,74 @@
+version: '3'
+services:
+  oj-gateway:
+    container_name: oj-gateway
+    build:
+      dockerfile: Dockerfile-gateway
+    ports:
+      - "88:88"
+    networks:
+      - mynetwork
+    environment:
+      - JAVA_OPTS=-Xmx256m
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+
+  oj-user-service:
+    container_name: oj-user-service
+    build:
+      dockerfile: Dockerfile-user
+    ports:
+      - "8030:8030"
+    networks:
+      - mynetwork
+    depends_on:
+      - oj-gateway
+    environment:
+      - JAVA_OPTS=-Xmx512m
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  oj-question-service:
+    container_name: oj-question-service
+    build:
+      dockerfile: Dockerfile-question
+    ports:
+      - "8020:8020"
+    networks:
+      - mynetwork
+    depends_on:
+      - oj-user-service
+      - oj-gateway
+    environment:
+      - JAVA_OPTS=-Xmx512m
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  oj-judge-service:
+    container_name: oj-judge-service
+    build:
+      dockerfile: Dockerfile-judge
+    ports:
+      - "8010:8010"
+    networks:
+      - mynetwork
+    depends_on:
+      - oj-user-service
+      - oj-question-service
+      - oj-gateway
+    environment:
+      - JAVA_OPTS=-Xmx512m
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+# 网络，不定义的话就是默认网络
+networks:
+  mynetwork:
