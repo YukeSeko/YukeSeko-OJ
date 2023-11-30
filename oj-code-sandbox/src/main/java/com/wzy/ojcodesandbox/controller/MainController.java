@@ -1,0 +1,51 @@
+package com.wzy.ojcodesandbox.controller;
+
+import com.wzy.ojcodesandbox.model.ExecuteCodeRequest;
+import com.wzy.ojcodesandbox.model.ExecuteCodeResponse;
+import com.wzy.ojcodesandbox.template.JavaDockerCodeSandbox;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * @author 王灼宇
+ * @Since 2023/10/8 15:59
+ */
+@RestController("/")
+public class MainController {
+
+
+    // 定义鉴权请求头和密钥
+    private static final String AUTH_REQUEST_HEADER = "auth";
+    private static final String AUTH_REQUEST_SECRET = "secretKey";
+
+    @Resource
+    private JavaDockerCodeSandbox javaDockerCodeSandbox;
+
+    /**
+     * 执行代码
+     *
+     * @param executeCodeRequest
+     * @return
+     */
+    @PostMapping("/executeCode")
+    public ExecuteCodeResponse executeCode(@RequestBody ExecuteCodeRequest executeCodeRequest, HttpServletRequest request,
+                                    HttpServletResponse response) {
+        // 基本的认证
+        String authHeader = request.getHeader(AUTH_REQUEST_HEADER);
+        if (!AUTH_REQUEST_SECRET.equals(authHeader)) {
+            response.setStatus(403);
+            return null;
+        }
+        if (executeCodeRequest == null) {
+            throw new RuntimeException("请求参数为空");
+        }
+        return javaDockerCodeSandbox.executeCode(executeCodeRequest);
+    }
+
+
+}
